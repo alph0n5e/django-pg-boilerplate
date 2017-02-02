@@ -1,0 +1,32 @@
+version: '2'
+
+volumes:
+  postgres_data: {}
+  postgres_backup: {}
+
+services:
+
+  postgres:
+    image: typezero-labs/incontrol-api-db:latest-dev
+    build: ./postgres/
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backup:/backups
+    env_file:
+      - ./environments/local.env
+
+  app:
+    image: typezero-labs/incontrol-api-core:latest-dev
+    build:
+      context: ./app/
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./app:/app
+    user: django
+    ports:
+      - '8000:8000'
+    depends_on:
+      - postgres
+    env_file:
+      - ./environments/local.env
+    command: /start-dev.sh

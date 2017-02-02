@@ -1,0 +1,6 @@
+# Project
+environments/*
+!environments/template.env
+
+# Python
+*.pyc
